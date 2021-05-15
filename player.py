@@ -29,7 +29,7 @@ class Player:
 		self.hIT = np.zeros(self.horizon)
 
 		#Charges
-		self.lIT = np.zeros(self.horizon)
+		self.lIT = np.zeros(self.horizon) #Supposé connu
 		self.lNF=np.zeros(self.horizon)
 		self.lHP = np.zeros(self.horizon)
 
@@ -44,17 +44,30 @@ class Player:
 
 	def compute_all_load(self):
 		load = np.zeros(self.horizon)
-		# for time in range(self.horizon):
-		# 	load[time] = self.compute_load(time)
+		for time in range(self.horizon):
+		 	load[time] = self.compute_load(time)
 		return load
 
 	def take_decision(self, time):
-		# TO BE COMPLETED
-		return 0
+		#Update des charges et de la chaleur rejetée indépendantes de alpha
+		self.hIT[time]=self.lIT[time]
+		self.hr[time] = self.COPcs / self.EER * self.lIT[time]
+		self.lNF[time]=(1+1/(EER*dt))*self.lIT[time]
+
+		#Décision quant à l'activation du système d'exploitation de la chaleur rejetée
+		if self.prices[time]*hr[time]<self.MaxProd*prices[time+self.horizon]:
+			self.hDC[time]=self.MaxProd #Vaut 0 si alpha vaut 0
+			self.lHP[time]=self.hDC[time]/(self.COPhp*self.dt) #Vaut 0 si alpha vaut 0
+			alpha[time]=self.lHP[time]*(self.COPhp-1)*self.dt/self.hr[time]# Alpha vaut 0 par défaut
+		return alpha[time]
 
 	def compute_load(self, time):
-		load = self.take_decision(time)
-		# do stuff ?
+		load = 0
+		alpha=self.take_decision(time)
+		load+=alpha*self.hr[time]/((self.COPhp-1)*self.dt) #Heat production load
+		#load+=self.lIT[time] #IT load
+		load+=self.lNF[time]#Non-flexible electricity load
+
 		return load
 
 	def reset(self):
