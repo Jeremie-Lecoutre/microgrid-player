@@ -9,8 +9,7 @@ class Player:
 		# some player might not have parameters
 		self.parameters = 0
 
-		#Données en entrée
-		self.prices = {"purchase": np.ones(self.horizon), "sale":np.ones(self.horizon)}
+
 
 		#Constantes du problème
 		self.dt=0.5
@@ -23,10 +22,13 @@ class Player:
 		self.COPhp=self.Tcom/(self.Tcom-self.Tr)*self.e #Coefficient of performance (heat production)
 		self.MaxProd=10 #kWh
 
+		# Données en entrée
+		self.prices = {"purchase": np.ones(self.horizon), "sale": np.ones(self.horizon)}
+		self.prices=20+12*np.random.rand(2*self.horizon)
 		#Puissances thermiques
-		self.hDC=np.zeros(self.horizon)
-		self.hr=np.zeros(self.horizon)
-		self.hIT = np.zeros(self.horizon)
+		self.hDC=np.ones(self.horizon)
+		self.hr=np.ones(self.horizon)
+		self.hIT = np.ones(self.horizon)
 
 		#Charges
 		self.lIT = np.zeros(self.horizon) #Supposé connu
@@ -52,14 +54,14 @@ class Player:
 		#Update des charges et de la chaleur rejetée indépendantes de alpha
 		self.hIT[time]=self.lIT[time]
 		self.hr[time] = self.COPcs / self.EER * self.lIT[time]
-		self.lNF[time]=(1+1/(EER*dt))*self.lIT[time]
+		self.lNF[time]=(1+1/(self.EER*self.dt))*self.lIT[time]
 
 		#Décision quant à l'activation du système d'exploitation de la chaleur rejetée
-		if self.prices[time]*hr[time]<self.MaxProd*prices[time+self.horizon]:
+		if self.prices[time]*self.hr[time] < self.MaxProd*self.prices[time+self.horizon]:
 			self.hDC[time]=self.MaxProd #Vaut 0 si alpha vaut 0
 			self.lHP[time]=self.hDC[time]/(self.COPhp*self.dt) #Vaut 0 si alpha vaut 0
-			alpha[time]=self.lHP[time]*(self.COPhp-1)*self.dt/self.hr[time]# Alpha vaut 0 par défaut
-		return alpha[time]
+			self.alpha[time]=self.lHP[time]*(self.COPhp-1)*self.dt/self.hr[time]# Alpha vaut 0 par défaut
+		return self.alpha[time]
 
 	def compute_load(self, time):
 		load = 0
@@ -73,3 +75,7 @@ class Player:
 	def reset(self):
 		# reset all observed data
 		pass
+
+if __name__ =='__main__' :
+	my_player=Player()
+	my_load=my_player.compute_load(0)
