@@ -23,6 +23,7 @@ class Player:
         # Données en entrée
         self.prices = {"purchase": np.ones(self.horizon), "sale": np.ones(self.horizon)}
         self.prices = 20 + 12 * np.random.rand(2 * self.horizon)
+
         # Puissances thermiques
         self.hDC = np.ones(self.horizon)
         self.hr = np.ones(self.horizon)
@@ -78,3 +79,4 @@ class Player:
 if __name__ == '__main__':
     my_player = Player()
     my_load = my_player.compute_load(0)
+    print(my_load)
