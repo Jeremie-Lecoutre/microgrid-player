@@ -1,7 +1,8 @@
 # python 3
 # this class combines all basic features of a generic player
 import numpy as np
-
+import pandas as pd
+import os
 
 class Player:
 
@@ -30,7 +31,10 @@ class Player:
         self.hIT = np.ones(self.horizon)
 
         # Charges
-        self.lIT = np.ones(self.horizon)  # Supposé connu
+        self.lIT = 20 + 12 * np.random.rand(self.horizon)  # Supposé connu
+        """l_i = pd.read_csv("C:\\Ponts\\COV\\Optimisation et énergie\\data_center_scenarios.csv", ";")
+        self.lIT = l_i["scenario" == 1]
+        print (self.lIT)"""
         self.lNF = np.zeros(self.horizon)
         self.lHP = np.zeros(self.horizon)
 
