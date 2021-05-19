@@ -33,9 +33,9 @@ class Player:
 
         # Charges
         self.lIT = 20 + 12 * np.random.rand(self.horizon)  # Supposé connu
-        l_i = pd.read_csv("C:\\Ponts\\COV\\Optimisation et énergie\\data_center_scenarios.csv", sep=";")
-
-        """self.lIT = l_i[l_i["scenario"] == 1]["cons (kW)"]"""
+        """l_i = pd.read_csv("C:\\Ponts\\COV\\Optimisation et énergie\\data_center_scenarios.csv", sep=";")"""
+        l_i = pd.read_csv(os.path.join(os.getcwd(),"data_center_scenarios.csv"), sep=";")
+        self.lIT = l_i[l_i["scenario"] == 1]["cons (kW)"]
 
         self.lNF = np.zeros(self.horizon)
         self.lHP = np.zeros(self.horizon)
